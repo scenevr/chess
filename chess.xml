@@ -9,6 +9,13 @@
       - You MUST give credit to cemkalyoncu.
   -->
 
+  <spawn position="0 0 20" />
+
+  <skybox style="color: linear-gradient(#f3f3f3, #acf)" />
+  <fog style="color: #ccc" near="50" far="100" />
+
+
+  <!-- Instructions -->
   <billboard position="-2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
       Two player VR chess by @bnolan.
       <br /><br />
@@ -20,34 +27,31 @@
       there.
   ]]></billboard>
 
+  <!-- Reset button -->
   <billboard id="game-status" position="2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
       <h1 style="margin: 60px 0; text-align: center;">Reset button</h1>
       <center>
         Visible after no one has moved for two minutes.
   ]]></billboard>
-
   <box id="reset-button" style="color: #f00;" position="2 0.7 15.2" scale="0.4 0.4 0.2" />
 
-  <spawn position="0 0 20" />
-
-  <skybox style="color: linear-gradient(#f3f3f3, #acf)" />
-  <fog style="color: #ccc" near="50" far="100" />
-
+  <!-- Who's move is it? -->
   <model id="black-text" src="/models/black.obj" style="color: #333" position="0 0 -10" scale="1 1 1" />
   <model id="white-text" src="/models/white.obj" style="color: #fff" position="0 0 -10" scale="1 1 1" />
 
-  <!-- Pieces are added using the script below -->
-
+  <!-- Pieces are added to the board using the script below -->
   <box id="board" position="0 0.005 0" rotation="0 0 0" scale="16 0.1 16" style="texture-map: url(/images/checkerboard.png)" />
 
-  <script src="scripts/chess.js"></script>
+  <!-- Observation platform -->
+  <box position="-10 6 0" scale="10 1 1" style="color: #ccc" rotation="0 1.57 0" />
+  <box position="-10 2.5 8.25" scale="10 1 1" style="color: #ccc" rotation="0.78 1.57 0" />
+  <box position="10 6 0" scale="10 1 1" style="color: #333" rotation="0 1.57 0" />
+  <box position="10 2.5 8.25" scale="10 1 1" style="color: #333" rotation="0.78 1.57 0" />
 
+  <!-- We use chess.js -->
+  <script src="scripts/chess.js"></script>
   <script>
     <![CDATA[
-
-      // Create a new game
-      var chess = new Chess();
-      reset();
 
       // Some globals
       var selected = null,
@@ -115,7 +119,7 @@
         }
 
         addPieceListeners();
-        showTurn();
+        endOfTurn();
       }
 
       // Show the relevant black/white text
@@ -126,7 +130,10 @@
 
       // Do end of turn tidy ups
       function endOfTurn(){
-        deselect();
+        if(selected){
+          deselect();
+        }
+
         showTurn();
         updateLastMoveAt();
       }
@@ -221,6 +228,10 @@
           }
         }
       });
+
+      // Create a new game
+      var chess = new Chess();
+      reset();
     ]]>
   </script>
 </scene>
