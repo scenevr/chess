@@ -137,8 +137,6 @@
 
         showTurn();
         updateLastMoveAt();
-
-        console.log(chess.fen());
       }
 
       // Update the lastMoveAt (to keep track of idle games)
@@ -170,13 +168,52 @@
         return new Vector(x * 2 - 8 + 1, 0, z * 2 - 8 + 1);
       }
 
+      var cmAnimation = 0;
+      function checkmate(){
+        cmAnimation = 5 * 10;
+
+        function toTheMoon(){
+          document.querySelectorAll("model.piece").forEach(function(piece){
+            piece.rotation.x += 0.1;
+            piece.rotation.z += 0.2;
+            piece.position.y += 0.5;
+          });
+
+          if(cmAnimation-- > 0){
+            setTimeout(toTheMoon, 1000/5);
+          }else{
+            reset();
+          }
+        }
+
+        toTheMoon();
+      }
+
       // Helper
       function tryMove(a, b, piece){
         var m = chess.move({ from : a, to : b, promotion: 'q'});
 
         if(m && m.flags.match(/p/)){
+          console.log("Piece promoted to queen");
           piece.src = "/models/queen.obj";
           piece.className = "piece queen " + (m.color == 'b' ? 'black' : 'white');
+        }else if(m && m.flags.match(/c/)){
+          console.log("Captured moving from " + a + " to " + b);
+        }
+         else if(m){
+          console.log("Moved from " + a + " to " + b);
+        }
+
+        if(chess.in_checkmate()){
+          console.log("Checkmate");
+          console.log(turnName() + " wins!");
+          checkmate();
+        }else if(chess.in_draw()){
+          console.log("Draw");
+        }else if (chess.in_stalemate()){
+          console.log("Stalemate");
+        }else if(chess.in_check()){
+          console.log("Check");
         }
 
         return m;
@@ -200,8 +237,6 @@
               select(model);
             }else if(selected){
               if(tryMove(fromReference, reference, selected)){
-                console.log("Piece taken moving from " + fromReference + " to " + reference);
-
                 // Piece was taken!
                 document.scene.removeChild(model);
                 selected.position = algebraicToWorldspace(reference);
@@ -229,7 +264,6 @@
 
         if(selected){
           if(tryMove(fromReference, reference, selected)){
-            console.log("Moved from " + fromReference + " to " + reference);
             selected.position = algebraicToWorldspace(reference);
 
             endOfTurn();
