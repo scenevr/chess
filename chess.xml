@@ -14,6 +14,7 @@
   <skybox style="color: linear-gradient(#f3f3f3, #acf)" />
   <fog style="color: #ccc" near="50" far="100" />
 
+  <link href="//home.scenevr.hosting/home.xml" position="-5 1 15" />
 
   <!-- Instructions -->
   <billboard position="-2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
@@ -57,7 +58,7 @@
       var selected = null,
         lastMoveAt = 0,
         fromReference,
-        TIMEOUT = 10;
+        TIMEOUT = 2 * 60;
 
       // Select a piece
       function select(piece){
@@ -136,6 +137,8 @@
 
         showTurn();
         updateLastMoveAt();
+
+        console.log(chess.fen());
       }
 
       // Update the lastMoveAt (to keep track of idle games)
@@ -168,8 +171,15 @@
       }
 
       // Helper
-      function tryMove(a, b){
-        return chess.move({ from : a, to : b});
+      function tryMove(a, b, piece){
+        var m = chess.move({ from : a, to : b, promotion: 'q'});
+
+        if(m && m.flags.match(/p/)){
+          piece.src = "/models/queen.obj";
+          piece.className = "piece queen " + (m.color == 'b' ? 'black' : 'white');
+        }
+
+        return m;
       }
 
       // Return name of color of whose turn it is
@@ -189,7 +199,7 @@
               deselect();
               select(model);
             }else if(selected){
-              if(tryMove(fromReference, reference)){
+              if(tryMove(fromReference, reference, selected)){
                 console.log("Piece taken moving from " + fromReference + " to " + reference);
 
                 // Piece was taken!
@@ -218,7 +228,7 @@
         var reference = worldspaceToAlgebraic(e.point);
 
         if(selected){
-          if(tryMove(fromReference, reference)){
+          if(tryMove(fromReference, reference, selected)){
             console.log("Moved from " + fromReference + " to " + reference);
             selected.position = algebraicToWorldspace(reference);
 
