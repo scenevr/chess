@@ -45,10 +45,11 @@
   <!-- Changelog -->
   <billboard position="6 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
       <b>Changelog</b><br /><br />
+      7.03.15 Fixed en-passant capture.<br />
       5.03.15 Fixed promotion, added message checkmate, stalemate, draw.<br /><br />
       <b>Issues</b><br />
-      Castling not working. If you want to help fix:<br />
-      github.com/scenevr/chess/issues
+      Castling doesn't work.<br />
+      Promotion: the piece changes to the correct type, but the model doesnt change. scenevr-web bug.
   ]]></billboard>
 
   <!-- Who's move is it? -->
@@ -109,6 +110,7 @@
         piece.className = "piece " + mapping[placement.type] + " " + (placement.color == 'b' ? 'black' : 'white');
         piece.style = "collision: none; color: " + (placement.color == 'b' ? '#333' : '#fff') + ";"
         piece.position = algebraicToWorldspace(position);
+        piece.setAttribute("data-position", position);
         piece.scale = new Vector(0.5,0.5,0.5);
         document.scene.appendChild(piece);
       }
@@ -116,6 +118,7 @@
       // Reset the game and add pieces
       function reset(){
         chess.reset();
+        // chess = new Chess("rnbqkbnr/ppp1pp2/6p1/2Pp3p/7P/8/PP1PPPP1/RNBQKBNR w KQkq d6 0 4");
 
         document.querySelectorAll("model.piece").forEach(function(piece){
           document.scene.removeChild(piece);
@@ -152,6 +155,8 @@
 
         showTurn();
         updateLastMoveAt();
+
+        // console.log(chess.fen());
       }
 
       // Update the lastMoveAt (to keep track of idle games)
@@ -204,9 +209,33 @@
         toTheMoon();
       }
 
+      function previousRank(alg){
+        return alg.split('')[0] + (parseInt(alg.split('')[1]) - 1);
+      }
+
+      function getPieceByAlgebraic(alg){
+        var piece = null;
+
+        document.querySelectorAll("model.piece").forEach(function(p){
+          if(p.getAttribute("data-position") == alg){
+            piece = p;
+          }
+        });
+
+        if(!piece){
+          throw "Could not find piece at " + alg;
+        }
+
+        return piece;
+      }
+
       // Helper
       function tryMove(a, b, piece){
         var m = chess.move({ from : a, to : b, promotion: 'q'});
+
+        if(m){
+          piece.setAttribute("data-position", b);
+        }
 
         if(m && m.flags.match(/p/)){
           console.log("Piece promoted to queen");
@@ -214,8 +243,10 @@
           piece.className = "piece queen " + (m.color == 'b' ? 'black' : 'white');
         }else if(m && m.flags.match(/c/)){
           console.log("Captured moving from " + a + " to " + b);
-        }
-         else if(m){
+        }else if(m && m.flags.match(/e/)){
+          console.log("En-passant capture moving from " + a + " to " + b);
+          document.scene.removeChild(getPieceByAlgebraic(previousRank(b)));
+        }else if(m){
           console.log("Moved from " + a + " to " + b);
         }
 
