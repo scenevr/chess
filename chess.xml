@@ -118,7 +118,6 @@
       // Reset the game and add pieces
       function reset(){
         chess.reset();
-        // chess = new Chess("rnbqkbnr/ppp1pp2/6p1/2Pp3p/7P/8/PP1PPPP1/RNBQKBNR w KQkq d6 0 4");
 
         document.querySelectorAll("model.piece").forEach(function(piece){
           document.scene.removeChild(piece);
@@ -155,8 +154,6 @@
 
         showTurn();
         updateLastMoveAt();
-
-        // console.log(chess.fen());
       }
 
       // Update the lastMoveAt (to keep track of idle games)
@@ -209,10 +206,6 @@
         toTheMoon();
       }
 
-      function previousRank(alg){
-        return alg.split('')[0] + (parseInt(alg.split('')[1]) - 1);
-      }
-
       function getPieceByAlgebraic(alg){
         var piece = null;
 
@@ -229,9 +222,30 @@
         return piece;
       }
 
+      function previousRank(alg){
+        return alg.split('')[0] + (parseInt(alg.split('')[1]) - 1);
+      }
+
+      function previousFile(alg){
+        return String.fromCharCode(alg.charCodeAt(0) - 1) + alg.split('')[1];
+      }
+
+      function subsequentFile(alg){
+        return String.fromCharCode(alg.charCodeAt(0) + 1) + alg.split('')[1];
+      }
+
+      function queensideRook(rank){
+        return 'a' + rank;
+      }
+
+      function kingsideRook(rank){
+        return 'h' + rank;
+      }
+
       // Helper
       function tryMove(a, b, piece){
-        var m = chess.move({ from : a, to : b, promotion: 'q'});
+        var m = chess.move({ from : a, to : b, promotion: 'q'}),
+          rank = b.split('')[1];
 
         if(m){
           piece.setAttribute("data-position", b);
@@ -246,6 +260,12 @@
         }else if(m && m.flags.match(/e/)){
           console.log("En-passant capture moving from " + a + " to " + b);
           document.scene.removeChild(getPieceByAlgebraic(previousRank(b)));
+        }else if(m && m.flags.match(/q/)){
+          console.log("Queen side castling");
+          getPieceByAlgebraic(queensideRook(rank)).position = algebraicToWorldspace(previousFile(a));
+        }else if(m && m.flags.match(/k/)){
+          console.log("King side castling");
+          getPieceByAlgebraic(kingsideRook(rank)).position = algebraicToWorldspace(subsequentFile(a));
         }else if(m){
           console.log("Moved from " + a + " to " + b);
         }
