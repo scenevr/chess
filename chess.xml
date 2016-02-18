@@ -14,13 +14,6 @@
   <skybox style="color: linear-gradient(#f3f3f3, #acf)" />
   <fog style="color: #ccc" near="50" far="100" />
 
-  <billboard position="-5 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
-      <h1 style="text-align: center; margin: 20px 0; font-weight: normal; color: #f70;">
-        Click the portal below and come explore the rest of <b>SceneVR</b>!
-      </h1>
-  ]]></billboard>
-  <link href="//home.scenevr.hosting/home.xml" position="-5 1 15.5" />
-
   <!-- Instructions -->
   <billboard position="-2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
       Two player VR chess by @bnolan.
@@ -45,11 +38,12 @@
   <!-- Changelog -->
   <billboard position="6 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
       <b>Changelog</b><br /><br />
+      18.02.16 Deployed to heroku.<br />
+      18.02.16 Holy shit a year has passed.<br />
       7.03.15 Fixed en-passant capture.<br />
       5.03.15 Fixed promotion, added message checkmate, stalemate, draw.<br /><br />
       <b>Issues</b><br />
-      Castling doesn't work.<br />
-      Promotion: the piece changes to the correct type, but the model doesnt change. scenevr-web bug.
+      None that I'm aware of.
   ]]></billboard>
 
   <!-- Who's move is it? -->

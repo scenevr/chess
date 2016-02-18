@@ -1,0 +1,23 @@
+{
+  "name": "scenevr-chess",
+  "version": "1.0.0",
+  "description": "Chess in SceneVR",
+  "main": "index.js",
+  "scripts": {
+    "start": "scenevr .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scenevr/puckman.git"
+  },
+  "author": "bnolan@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/scenevr/puckman/issues"
+  },
+  "homepage": "https://github.com/scenevr/puckman",
+  "dependencies": {
+    "scenevr": "^1.14.0"
+  }
+}
