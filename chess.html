@@ -1,5 +1,7 @@
-<script src="https://assets-scenevr-com.s3.amazonaws.com/prerelease/dist/aframe.js"></script>
-<script src="https://assets-scenevr-com.s3.amazonaws.com/prerelease/components/aframe-draw-component.min.js"></script>
+<script src="https://www.scenevr.com/prerelease/dist/aframe.min.js"></script>
+
+<script src="https://www.scenevr.com/prerelease/components/aframe-draw-component.min.js"></script>
+
 <script src="https://scenevr.github.io/htmltexture-component/dist/aframe-htmltexture-component.min.js"></script>
 
 <style>
@@ -60,8 +62,8 @@ div{
   <a-entity scenevr='grid: true'>
     <a-entity light='type: ambient; color: #777'></a-entity>
     <a-entity light='type: point; angle: 45; color: #ffffff; intensity: 0.9' position='100 100 100'></a-entity>
-    <a-sky rotation='0 -45 0' src='http://assets-scenevr-com.s3.amazonaws.com/prerelease/images/sky.png'></a-sky>
-    <a-entity rotation='-90 0 0' geometry='primitive: plane; width: 1024; height: 1024;' material="repeat: 1024 1024; src: url(https://assets-scenevr-com.s3.amazonaws.com/prerelease/images/grid.png)"></a-entity>
+    <a-sky rotation='0 -45 0' src='https://www.scenevr.com/prerelease/images/sky.png'></a-sky>
+    <a-entity rotation='-90 0 0' geometry='primitive: plane; width: 1024; height: 1024;' material="repeat: 1024 1024; src: url(https://www.scenevr.com/prerelease/images/grid.png)"></a-entity>
     <a-camera fov="60" position='0 1.8 20' wasd-controls="acceleration: 100">
       <a-entity
         cursor="maxDistance: 30; timeout: 500"
