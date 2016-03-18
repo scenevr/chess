@@ -1,4 +1,19 @@
-<scene>
+<script src="https://assets-scenevr-com.s3.amazonaws.com/prerelease/dist/aframe.js"></script>
+<script src="https://assets-scenevr-com.s3.amazonaws.com/prerelease/components/aframe-draw-component.min.js"></script>
+<script src="https://scenevr.github.io/htmltexture-component/dist/aframe-htmltexture-component.min.js"></script>
+
+<style>
+*{ font-family: sans-serif; }
+div{
+  font-size: 1.3em;
+  padding: 16px;
+  background: white;
+}
+</style>
+
+<body>
+
+<a-scene>
   <!--
     This blend has been released under
     Creative Commons Attribution 3.0
@@ -9,13 +24,8 @@
       - You MUST give credit to cemkalyoncu.
   -->
 
-  <spawn position="0 0 20" />
-
-  <skybox style="color: linear-gradient(#f3f3f3, #acf)" />
-  <fog style="color: #ccc" near="50" far="100" />
-
-  <!-- Instructions -->
-  <billboard position="-2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
+  <a-assets>
+    <div id="instructions">
       Two player VR chess by @bnolan.
       <br /><br />
       Chess pieces CC-by-attribution created by @cemkalyoncu.
@@ -24,46 +34,71 @@
       <br /><br />
       Click on a piece to select it, then click on the board to move the piece
       there.
-  ]]></billboard>
+    </div>
 
-  <!-- Reset button -->
-  <billboard id="game-status" position="2 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
+    <div id="reset">
       <h1 style="margin: 60px 0; text-align: center;">Reset button</h1>
       <center>
         Visible after no one has moved for two minutes.
-      </billboard>
-  ]]></billboard>
-  <box id="reset-button" style="color: #f00;" position="2 0.7 15.2" scale="0.4 0.4 0.2" />
+      </center>
+    </div>
 
-  <!-- Changelog -->
-  <billboard position="6 1 15" rotation="0 0 0" scale="2 2 0.2"><![CDATA[
+    <div id="changelog">
       <b>Changelog</b><br /><br />
+      18.03.16 Migrated to aframe.<br />
       18.02.16 Deployed to heroku.<br />
       18.02.16 Holy shit a year has passed.<br />
       7.03.15 Fixed en-passant capture.<br />
       5.03.15 Fixed promotion, added message checkmate, stalemate, draw.<br /><br />
       <b>Issues</b><br />
       None that I'm aware of.
-  ]]></billboard>
+    </div>
+  </a-assets>
+
+
+  <!-- SceneVR lighting -->
+  <a-entity scenevr='grid: true'>
+    <a-entity light='type: ambient; color: #777'></a-entity>
+    <a-entity light='type: point; angle: 45; color: #ffffff; intensity: 0.9' position='100 100 100'></a-entity>
+    <a-sky rotation='0 -45 0' src='http://assets-scenevr-com.s3.amazonaws.com/prerelease/images/sky.png'></a-sky>
+    <a-entity rotation='-90 0 0' geometry='primitive: plane; width: 1024; height: 1024;' material="repeat: 1024 1024; src: url(https://assets-scenevr-com.s3.amazonaws.com/prerelease/images/grid.png)"></a-entity>
+    <a-camera fov="60" position='0 1.8 20' wasd-controls="acceleration: 100">
+      <a-entity
+        cursor="maxDistance: 30; timeout: 500"
+        position="0 0 -1"
+        geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015; segmentsTheta: 32"
+        material="color: #ff7700; shader: flat">
+      </a-entity>
+    </a-camera>
+  </a-entity>
+
+  <!-- Instructions -->
+  <a-entity geometry="primitive: box" position="-2 1 15" scale="1 1 0.1" draw="width: 512; height: 512;" htmltexture="asset: #instructions"></a-entity>
+
+  <!-- Reset button -->
+  <a-entity geometry="primitive: box" position="2 1 15" scale="1 1 0.1" draw="width: 512; height: 512;" htmltexture="asset: #reset"></a-entity>
+  <a-box id="reset-button" material="color: #f00;" position="2 0.7 15.2" scale="0.2 0.2 0.1" ></a-box>
+
+  <!-- Changelog -->
+  <a-entity geometry="primitive: box" position="6 1 15" scale="1 1 0.1" draw="width: 512; height: 512;" htmltexture="asset: #changelog"></a-entity>
 
   <!-- Who's move is it? -->
-  <model id="black-text" src="/models/black.obj" style="color: #333" position="0 0 -10" scale="1 1 1" />
-  <model id="white-text" src="/models/white.obj" style="color: #fff" position="0 0 -10" scale="1 1 1" />
+  <a-obj-model id="black-text" src="/models/black.obj" material="color: #333333" position="0 0 -10" visible="false"></a-obj-model>
+  <a-obj-model id="white-text" src="/models/white.obj" material="color: #ffffff" position="0 0 -10"></a-obj-model>
 
   <!-- Pieces are added to the board using the script below -->
-  <box id="board" position="0 0.005 0" rotation="0 0 0" scale="16 0.1 16" style="texture-map: url(/images/checkerboard.png)" />
+  <a-box id="board" position="0 0.005 0" rotation="0 0 0" scale="8 0.05 8" material="src: url(/images/checkerboard.png)"></a-box>
 
   <!-- Observation platform -->
-  <box position="-10 6 0" scale="10 1 1" style="color: #ccc" rotation="0 1.57 0" />
-  <box position="-10 2.5 8.25" scale="10 1 1" style="color: #ccc" rotation="0.78 1.57 0" />
-  <box position="10 6 0" scale="10 1 1" style="color: #333" rotation="0 1.57 0" />
-  <box position="10 2.5 8.25" scale="10 1 1" style="color: #333" rotation="0.78 1.57 0" />
+  <a-box position="-10 6 0" scale="0.5 0.5 5" material="color: #ccc" rotation="0 0 0"></a-box>
+  <a-box position="-10 2.5 8.25" scale="0.5 0.5 5" material="color: #ccc" rotation="45 0 0"></a-box>
+  <a-box position="10 6 0" scale="0.5 0.5 5" material="color: #333" rotation="0 0 0"></a-box>
+  <a-box position="10 2.5 8.25" scale="0.5 0.5 5" material="color: #333" rotation="45 0 0"></a-box>
+</a-scene>
 
   <!-- We use chess.js -->
   <script src="scripts/chess.js"></script>
   <script>
-    <![CDATA[
-
       // Some globals
       var selected = null,
         lastMoveAt = 0,
@@ -76,14 +111,17 @@
           deselect();
         }
 
-        piece.style.color = 'red';
-        fromReference = worldspaceToAlgebraic(piece.position);
+        piece.setAttribute('material', { color: 'red'});
+        fromReference = worldspaceToAlgebraic(piece.getAttribute('position'));
         selected = piece;
       }
 
       // Deselect the selected piece
       function deselect(){
-        selected.style.color = selected.className.match(/black/) ? '#222' : '#eee';
+        selected.setAttribute('material', {
+          color: selected.className.match(/black/) ? '#222' : '#eee'
+        });
+
         selected = null;
         fromReference = null;
       }
@@ -99,22 +137,24 @@
           k : 'king'
         };
 
-        var piece = document.createElement("model");
-        piece.src = "/models/" + mapping[placement.type] + ".obj";
+        var piece = document.createElement("a-obj-model");
         piece.className = "piece " + mapping[placement.type] + " " + (placement.color == 'b' ? 'black' : 'white');
-        piece.style = "collision: none; color: " + (placement.color == 'b' ? '#333' : '#fff') + ";"
-        piece.position = algebraicToWorldspace(position);
+        piece.setAttribute('src', "/models/" + mapping[placement.type] + ".obj");
+        piece.setAttribute('material', "color: " + (placement.color == 'b' ? '#333' : '#fff') + ";");
+        piece.setAttribute('position', algebraicToWorldspace(position));
         piece.setAttribute("data-position", position);
-        piece.scale = new Vector(0.5,0.5,0.5);
-        document.scene.appendChild(piece);
+        piece.setAttribute('scale', new THREE.Vector3(0.5, 0.5, 0.5));
+        document.querySelector('a-scene').appendChild(piece);
       }
 
       // Reset the game and add pieces
       function reset(){
         chess.reset();
 
-        document.querySelectorAll("model.piece").forEach(function(piece){
-          document.scene.removeChild(piece);
+        var nodes = document.querySelectorAll("a-obj-model.piece");
+
+        [].forEach.call(nodes, function(piece){
+          document.querySelector('a-scene').removeChild(piece);
         });
 
         var rank, file;
@@ -161,6 +201,15 @@
         document.getElementById("reset-button").style.visibility = idle ? "visible" : "hidden";
       }, 1000);
 
+      function uvToAlgebraic(uv) {
+        var x = Math.floor(uv.x * 8),
+          z = Math.floor((1.0 - uv.y) * 8),
+          rank = x + 1,
+          file = String.fromCharCode(97 + z);
+
+        return(file + rank);
+      }
+
       // Convert 1,0,1 -> e5
       function worldspaceToAlgebraic(point){
         var x = Math.floor(point.x / 2),
@@ -176,7 +225,7 @@
         var x = parseInt(alg[1]) - 1,
           z = alg[0].charCodeAt(0) - 97;
 
-        return new Vector(x * 2 - 8 + 1, 0, z * 2 - 8 + 1);
+        return new THREE.Vector3(x * 2 - 8 + 1, 0, z * 2 - 8 + 1);
       }
 
       var cmAnimation = 0;
@@ -184,7 +233,7 @@
         cmAnimation = 5 * 10;
 
         function toTheMoon(){
-          document.querySelectorAll("model.piece").forEach(function(piece){
+          [].forEach.call(document.querySelectorAll("a-obj-model.piece"), function(piece){
             piece.rotation.x += 0.1;
             piece.rotation.z += 0.2;
             piece.position.y += 0.5;
@@ -203,7 +252,7 @@
       function getPieceByAlgebraic(alg){
         var piece = null;
 
-        document.querySelectorAll("model.piece").forEach(function(p){
+        [].forEach.call(document.querySelectorAll("a-obj-model.piece"), function(p){
           if(p.getAttribute("data-position") == alg){
             piece = p;
           }
@@ -238,6 +287,8 @@
 
       // Helper
       function tryMove(a, b, piece){
+        console.log(a, b);
+
         var m = chess.move({ from : a, to : b, promotion: 'q'}),
           rank = b.split('')[1];
 
@@ -253,13 +304,13 @@
           console.log("Captured moving from " + a + " to " + b);
         }else if(m && m.flags.match(/e/)){
           console.log("En-passant capture moving from " + a + " to " + b);
-          document.scene.removeChild(getPieceByAlgebraic(previousRank(b)));
+          document.querySelector('a-scene').removeChild(getPieceByAlgebraic(previousRank(b)));
         }else if(m && m.flags.match(/q/)){
           console.log("Queen side castling");
-          getPieceByAlgebraic(queensideRook(rank)).position = algebraicToWorldspace(previousFile(a));
+          getPieceByAlgebraic(queensideRook(rank)).setAttribute('position', algebraicToWorldspace(previousFile(a)));
         }else if(m && m.flags.match(/k/)){
           console.log("King side castling");
-          getPieceByAlgebraic(kingsideRook(rank)).position = algebraicToWorldspace(subsequentFile(a));
+          getPieceByAlgebraic(kingsideRook(rank)).setAttribute('position', algebraicToWorldspace(subsequentFile(a)));
         }else if(m){
           console.log("Moved from " + a + " to " + b);
         }
@@ -286,9 +337,9 @@
 
       // Add click listeners to all pieces
       function addPieceListeners(){
-        document.querySelectorAll("model.piece").forEach(function(model){
+        [].forEach.call(document.querySelectorAll("a-obj-model.piece"), function(model){
           model.addEventListener("click", function(e){
-            var reference = worldspaceToAlgebraic(model.position);
+            var reference = worldspaceToAlgebraic(model.getAttribute('position'));
 
             if((selected) && (selected == model)){
               deselect();
@@ -298,8 +349,8 @@
             }else if(selected){
               if(tryMove(fromReference, reference, selected)){
                 // Piece was taken!
-                document.scene.removeChild(model);
-                selected.position = algebraicToWorldspace(reference);
+                document.querySelector('a-scene').removeChild(model);
+                selected.setAttribute('position', algebraicToWorldspace(reference));
 
                 endOfTurn();
               }else{
@@ -313,18 +364,18 @@
       }
 
       // Reset button
-      document.getElementById("reset-button").addEventListener("click", function(e){
-        console.log("Game reset by anonymous pressing the reset button.");
-        reset();
-      });
+      //document.getElementById("reset-button").addEventListener("click", function(e){
+      //  console.log("Game reset by anonymous pressing the reset button.");
+      //  reset();
+      //});
 
       // Listen for clicks on the board
       document.getElementById("board").addEventListener("click", function(e){
-        var reference = worldspaceToAlgebraic(e.point);
+        var reference = uvToAlgebraic(e.detail.uv);
 
         if(selected){
           if(tryMove(fromReference, reference, selected)){
-            selected.position = algebraicToWorldspace(reference);
+            selected.setAttribute('position', algebraicToWorldspace(reference));
 
             endOfTurn();
           }else{
@@ -336,6 +387,5 @@
       // Create a new game
       var chess = new Chess();
       reset();
-    ]]>
   </script>
 </scene>
