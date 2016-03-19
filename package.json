@@ -1,0 +1,23 @@
+{
+  "name": "scenevr-chess",
+  "version": "1.0.0",
+  "description": "Chess in SceneVR",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "ghpages -d ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scenevr/chess.git"
+  },
+  "author": "bnolan@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/scenevr/chess/issues"
+  },
+  "homepage": "https://github.com/scenevr/chess",
+  "dependencies": {
+    "ghpages": "0.0.3"
+  }
+}
