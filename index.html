@@ -85,11 +85,11 @@ div{
   <a-entity geometry="primitive: box" position="6 1 15" scale="1 1 0.1" draw="width: 512; height: 512;" htmltexture="asset: #changelog"></a-entity>
 
   <!-- Who's move is it? -->
-  <a-obj-model id="black-text" src="/models/black.obj" material="color: #333333" position="0 0 -10" visible="false"></a-obj-model>
-  <a-obj-model id="white-text" src="/models/white.obj" material="color: #ffffff" position="0 0 -10"></a-obj-model>
+  <a-obj-model id="black-text" src="./models/black.obj" material="color: #333333" position="0 0 -10" visible="false"></a-obj-model>
+  <a-obj-model id="white-text" src="./models/white.obj" material="color: #ffffff" position="0 0 -10"></a-obj-model>
 
   <!-- Pieces are added to the board using the script below -->
-  <a-box id="board" position="0 0.005 0" rotation="0 0 0" scale="8 0.05 8" material="src: url(/images/checkerboard.png)"></a-box>
+  <a-box id="board" position="0 0.005 0" rotation="0 0 0" scale="8 0.05 8" material="src: url(./images/checkerboard.png)"></a-box>
 
   <!-- Observation platform -->
   <a-box position="-10 6 0" scale="0.5 0.5 5" material="color: #ccc" rotation="0 0 0"></a-box>
@@ -141,7 +141,7 @@ div{
 
         var piece = document.createElement("a-obj-model");
         piece.className = "piece " + mapping[placement.type] + " " + (placement.color == 'b' ? 'black' : 'white');
-        piece.setAttribute('src', "/models/" + mapping[placement.type] + ".obj");
+        piece.setAttribute('src', "./models/" + mapping[placement.type] + ".obj");
         piece.setAttribute('material', "color: " + (placement.color == 'b' ? '#333' : '#fff') + ";");
         piece.setAttribute('position', algebraicToWorldspace(position));
         piece.setAttribute("data-position", position);
@@ -300,7 +300,7 @@ div{
 
         if(m && m.flags.match(/p/)){
           console.log("Piece promoted to queen");
-          piece.src = "/models/queen.obj";
+          piece.src = "./models/queen.obj";
           piece.className = "piece queen " + (m.color == 'b' ? 'black' : 'white');
         }else if(m && m.flags.match(/c/)){
           console.log("Captured moving from " + a + " to " + b);
